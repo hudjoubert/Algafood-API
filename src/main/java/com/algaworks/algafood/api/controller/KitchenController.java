@@ -2,11 +2,13 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.domain.model.Kitchen;
 import com.algaworks.algafood.domain.repository.KitchenRepository;
+import com.algaworks.algafood.domain.service.KitchenRegistrationService;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/kitchens")
 public class KitchenController {
 
-  @Autowired private KitchenRepository kitchenRepository;
+  @Autowired
+  private KitchenRepository kitchenRepository;
 
-  @GetMapping
+  @Autowired
+  private KitchenRegistrationService kitchenRegistrationService;
+
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public List<Kitchen> list() {
     return kitchenRepository.list();
   }
@@ -43,7 +49,7 @@ public class KitchenController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public Kitchen create(@RequestBody Kitchen kitchen) {
-    return kitchenRepository.save(kitchen);
+    return kitchenRegistrationService.save(kitchen);
   }
 
   @PutMapping("/{id}")
@@ -69,7 +75,7 @@ public class KitchenController {
       Kitchen kitchen = kitchenRepository.find(id);
 
       if (kitchen != null) {
-        kitchenRepository.remove(kitchen);
+        kitchenRegistrationService.remove(kitchen);
         return ResponseEntity.noContent().build();
       }
       return ResponseEntity.notFound().build();

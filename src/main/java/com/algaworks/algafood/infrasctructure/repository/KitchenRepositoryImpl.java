@@ -33,8 +33,8 @@ public class KitchenRepositoryImpl implements KitchenRepository {
 
     @Transactional
     @Override
-    public void remove(Kitchen kitchen) {
-        kitchen = find(kitchen.getId());
+    public void remove(Long id) {
+        Kitchen kitchen = find(id);
         manager.remove(kitchen);
     }
 }
