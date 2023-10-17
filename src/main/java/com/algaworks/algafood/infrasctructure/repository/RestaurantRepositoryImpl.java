@@ -2,6 +2,7 @@ package com.algaworks.algafood.infrasctructure.repository;
 
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -34,8 +35,11 @@ public class RestaurantRepositoryImpl implements RestaurantRepository {
 
     @Transactional
     @Override
-    public void remove(Restaurant restaurant) {
-        restaurant = find(restaurant.getId());
+    public void remove(Long id) {
+        Restaurant restaurant = find(id);
+        if (restaurant == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
         manager.remove(restaurant);
     }
 }

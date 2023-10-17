@@ -20,7 +20,7 @@ public class Restaurant {
     private String name;
 
     @Column(name = "tax_shipping", nullable = false)
-    private BigDecimal taxaShipping;
+    private BigDecimal taxShipping;
 
     @ManyToOne
     @JoinColumn(name = "kitchen", nullable = false)
