@@ -76,14 +76,12 @@ public class KitchenController {
 
     try {
       kitchenRegistrationService.remove(id);
-      return ResponseEntity.noContent().build();
 
+      return ResponseEntity.noContent().build();
     } catch (EntityNotFoundException e) {
       return ResponseEntity.notFound().build();
-
     } catch (EntityInUseException e) {
       return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
-
   }
 }
