@@ -2,9 +2,9 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.domain.exception.EntityInUseException;
 import com.algaworks.algafood.domain.exception.EntityNotFoundException;
-import com.algaworks.algafood.domain.model.State;
-import com.algaworks.algafood.domain.repository.StateRepository;
-import com.algaworks.algafood.domain.service.StateRegistrationService;
+import com.algaworks.algafood.domain.model.City;
+import com.algaworks.algafood.domain.repository.CityRepository;
+import com.algaworks.algafood.domain.service.CityRegistrationService;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,53 +22,52 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/states")
-public class StateController {
+@RequestMapping("/cities")
+public class CityController {
 
   @Autowired
-  private StateRepository stateRepository;
+  private CityRepository cityRepository;
 
   @Autowired
-  private StateRegistrationService stateRegistrationService;
+  private CityRegistrationService cityRegistrationService;
 
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public List<State> list() {
-    return stateRepository.list();
+  public List<City> list() {
+    return cityRepository.list();
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<State> find(@PathVariable Long id) {
-    State state = stateRepository.find(id);
+  public ResponseEntity<City> find(@PathVariable Long id) {
+    City city = cityRepository.find(id);
 
-    if (!ObjectUtils.isEmpty(state)) {
-      return ResponseEntity.ok(state);
+    if (!ObjectUtils.isEmpty(city)) {
+      return ResponseEntity.ok(city);
     }
-
     return ResponseEntity.notFound().build();
   }
 
   @PostMapping
-  public ResponseEntity<?> create(@RequestBody State state) {
+  public ResponseEntity<?> create(@RequestBody City city) {
     try {
-      state = stateRegistrationService.save(state);
+      city = cityRegistrationService.save(city);
 
-      return ResponseEntity.status(HttpStatus.CREATED).body(state);
+      return ResponseEntity.status(HttpStatus.CREATED).body(city);
     } catch (EntityNotFoundException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody State state) {
+  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody City city) {
     try {
-      State currentState = stateRepository.find(id);
+      City currentCity = cityRepository.find(id);
 
-      if (!ObjectUtils.isEmpty(currentState)) {
-        BeanUtils.copyProperties(state, currentState, "id");
+      if (!ObjectUtils.isEmpty(currentCity)) {
+        BeanUtils.copyProperties(city, currentCity, "id");
 
-        currentState = stateRegistrationService.save(currentState);
-        return ResponseEntity.ok(currentState);
+        currentCity = cityRegistrationService.save(currentCity);
+        return ResponseEntity.ok(currentCity);
       }
       return ResponseEntity.notFound().build();
     } catch (EntityNotFoundException e) {
@@ -77,9 +76,9 @@ public class StateController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<State> delete(@PathVariable Long id) {
+  public ResponseEntity<City> delete(@PathVariable Long id) {
     try {
-      stateRegistrationService.remove(id);
+      cityRegistrationService.remove(id);
 
       return ResponseEntity.noContent().build();
     } catch (EntityNotFoundException e) {
@@ -88,4 +87,5 @@ public class StateController {
       return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
   }
+
 }

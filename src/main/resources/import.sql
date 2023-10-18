@@ -11,11 +11,11 @@ insert into state (name) values ('Minas Gerais');
 insert into state (name) values ('São Paulo');
 insert into state (name) values ('Ceará');
 
-insert into city (name, state_id) values ('Uberlândia', 1);
-insert into city (name, state_id) values ('Belo Horizonte', 1);
-insert into city (name, state_id) values ('São Paulo', 2);
-insert into city (name, state_id) values ('Campinas', 2);
-insert into city (name, state_id) values ('Fortaleza', 3);
+insert into city (name, state) values ('Uberlândia', 1);
+insert into city (name, state) values ('Belo Horizonte', 1);
+insert into city (name, state) values ('São Paulo', 2);
+insert into city (name, state) values ('Campinas', 2);
+insert into city (name, state) values ('Fortaleza', 3);
 
 insert into payment_method (description) values ('Cartão de crédito');
 insert into payment_method (description) values ('Cartão de débito');
