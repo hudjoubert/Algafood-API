@@ -2,11 +2,8 @@ package com.algaworks.algafood.domain.repository;
 
 import com.algaworks.algafood.domain.model.State;
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StateRepository {
+public interface StateRepository extends JpaRepository<State, Long> {
 
-    List<State> list();
-    State find(Long id);
-    State save(State state);
-    void remove(Long id);
 }

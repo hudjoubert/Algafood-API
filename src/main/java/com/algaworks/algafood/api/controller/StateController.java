@@ -6,6 +6,7 @@ import com.algaworks.algafood.domain.model.State;
 import com.algaworks.algafood.domain.repository.StateRepository;
 import com.algaworks.algafood.domain.service.StateRegistrationService;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,15 +35,15 @@ public class StateController {
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<State> list() {
-    return stateRepository.list();
+    return stateRepository.findAll();
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<State> find(@PathVariable Long id) {
-    State state = stateRepository.find(id);
+    Optional<State> state = stateRepository.findById(id);
 
-    if (!ObjectUtils.isEmpty(state)) {
-      return ResponseEntity.ok(state);
+    if (state.isPresent()) {
+      return ResponseEntity.ok(state.get());
     }
 
     return ResponseEntity.notFound().build();
@@ -62,13 +63,13 @@ public class StateController {
   @PutMapping("/{id}")
   public ResponseEntity<?> update(@PathVariable Long id, @RequestBody State state) {
     try {
-      State currentState = stateRepository.find(id);
+      Optional<State> currentState = stateRepository.findById(id);
 
       if (!ObjectUtils.isEmpty(currentState)) {
-        BeanUtils.copyProperties(state, currentState, "id");
+        BeanUtils.copyProperties(state, currentState.get(), "id");
 
-        currentState = stateRegistrationService.save(currentState);
-        return ResponseEntity.ok(currentState);
+        State stateSaved = stateRegistrationService.save(currentState.get());
+        return ResponseEntity.ok(stateSaved);
       }
       return ResponseEntity.notFound().build();
     } catch (EntityNotFoundException e) {

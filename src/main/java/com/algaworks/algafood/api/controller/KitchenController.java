@@ -7,9 +7,9 @@ import com.algaworks.algafood.domain.repository.KitchenRepository;
 import com.algaworks.algafood.domain.service.KitchenRegistrationService;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,15 +36,15 @@ public class KitchenController {
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<Kitchen> list() {
-    return kitchenRepository.list();
+    return kitchenRepository.findAll();
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<Kitchen> find(@PathVariable Long id) {
-    Kitchen kitchen = kitchenRepository.find(id);
+    Optional<Kitchen> kitchen = kitchenRepository.findById(id);
 
-    if (kitchen != null) {
-      return ResponseEntity.ok(kitchen);
+    if (kitchen.isPresent()) {
+      return ResponseEntity.ok(kitchen.get());
     }
 
     return ResponseEntity.notFound().build();
@@ -59,13 +59,13 @@ public class KitchenController {
 
   @PutMapping("/{id}")
   public ResponseEntity<Kitchen> update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
-    Kitchen currentKitchen = kitchenRepository.find(id);
+    Optional<Kitchen> currentKitchen = kitchenRepository.findById(id);
 
-    if (currentKitchen != null) {
-      BeanUtils.copyProperties(kitchen, currentKitchen, "id");
+    if (currentKitchen.isPresent()) {
+      BeanUtils.copyProperties(kitchen, currentKitchen.get(), "id");
 
-      currentKitchen = kitchenRegistrationService.save(currentKitchen);
-      return ResponseEntity.ok(currentKitchen);
+      Kitchen kitchenSaved = kitchenRegistrationService.save(currentKitchen.get());
+      return ResponseEntity.ok(kitchenSaved);
     }
 
     return ResponseEntity.notFound().build();

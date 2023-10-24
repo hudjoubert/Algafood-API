@@ -23,7 +23,7 @@ public class StateRegistrationService {
 
   public void remove(Long id) {
     try {
-      stateRepository.remove(id);
+      stateRepository.deleteById(id);
     } catch (EmptyResultDataAccessException e ) {
       throw new EntityNotFoundException("State not found!");
     } catch (DataIntegrityViolationException e) {

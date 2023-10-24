@@ -6,6 +6,7 @@ import com.algaworks.algafood.domain.model.City;
 import com.algaworks.algafood.domain.model.State;
 import com.algaworks.algafood.domain.repository.CityRepository;
 import com.algaworks.algafood.domain.repository.StateRepository;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,12 +23,10 @@ public class CityRegistrationService {
 
   public City save(City city) {
     Long id = city.getState().getId();
-    State state = stateRepository.find(id);
+    State state = stateRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException(
+            String.format("Não existe cadastro de cidade com código %d", id)));
 
-    if (ObjectUtils.isEmpty(state)) {
-      throw new EntityNotFoundException(
-          String.format("Não existe cadastro de cidade com código %d", id));
-    }
     city.setState(state);
 
     return cityRepository.save(city);
@@ -35,7 +34,7 @@ public class CityRegistrationService {
 
   public void remove(Long id) {
     try {
-      cityRepository.remove(id);
+      cityRepository.deleteById(id);
     } catch (EmptyResultDataAccessException e) {
       throw new EntityNotFoundException("City not found!");
     } catch (DataIntegrityViolationException e) {
